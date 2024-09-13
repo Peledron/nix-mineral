@@ -977,7 +977,7 @@ in
       # Bind mounting /usr with nodev causes boot failure
       # Bind mounting /boot/efi at all causes complete system failure
 
-      fileSystems = {
+      fileSystems = lib.mkDefault {
         # noexec on /home can be very inconvenient for desktops. See overrides.
         "/home" = {
           device = "/home";
