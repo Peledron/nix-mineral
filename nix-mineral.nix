@@ -631,7 +631,9 @@ in
       boot.kernelParams = overrideKernelParam "mitigations" "off";
     })
 
-    (l.mkIf cfg.overrides.performance.no-pti { boot.kernelParams = overrideKernelParam "pti" "off"; })
+    (l.mkIf cfg.overrides.performance.no-pti { 
+      boot.kernelParams = overrideKernelParam "pti" "off"; 
+    })
 
     # Security
 
