@@ -521,7 +521,7 @@ in
     # Desktop
 
     (l.mkIf cfg.overrides.desktop.allow-multilib {
-      boot.kernelParams = overrideKernelParam "ia32_emulation" "1" ];
+      boot.kernelParams = overrideKernelParam "ia32_emulation" "1";
     })
 
     (l.mkIf cfg.overrides.desktop.allow-unprivileged-userns {
