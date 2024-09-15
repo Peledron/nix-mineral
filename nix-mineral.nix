@@ -620,11 +620,11 @@ in
     # Performance
 
     (l.mkIf cfg.overrides.performance.allow-smt {
-      boot.kernelParams = overrideKernelParam "mitigations" "auto" ];
+      boot.kernelParams = overrideKernelParam "mitigations" "auto";
     })
 
     (l.mkIf cfg.overrides.performance.iommu-passthrough {
-      boot.kernelParams = overrideKernelParam "iommu.passthrough" "1" ];
+      boot.kernelParams = overrideKernelParam "iommu.passthrough" "1";
     })
 
     (l.mkIf cfg.overrides.performance.no-mitigations {
