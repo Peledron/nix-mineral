@@ -223,6 +223,7 @@ in
           description = ''
             setup secured filesystems to allow for existing impernamence setup that uses tmpfs
           '';
+        };
       };
       desktop = {
         allow-multilib = l.mkOption {
