@@ -475,7 +475,7 @@ in
     })
 
     (l.mkIf cfg.overrides.compatibility.no-lockdown {
-      boot.kernelParams = overrideKernelParam "lockdown" "" ];
+      boot.kernelParams = overrideKernelParam "lockdown" "";
     })
     (l.mkIf cfg.overrides.compatibility.tmpfs-impermanence {
       # since the impernamence module requires the /var and /etc directories, they are mounted before the rest of the initrd is done. 
