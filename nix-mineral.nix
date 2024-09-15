@@ -217,6 +217,12 @@ in
             Disable Linux Kernel Lockdown.
           '';
         };
+        tmpfs-impermanence = l.mkOption {
+          type = l.types.bool;
+          default = false;
+          description = ''
+            setup secured filesystems to allow for existing impernamence setup that uses tmpfs
+          '';
       };
       desktop = {
         allow-multilib = l.mkOption {
@@ -470,6 +476,46 @@ in
 
     (l.mkIf cfg.overrides.compatibility.no-lockdown {
       boot.kernelParams = overrideKernelParam "lockdown" "" ];
+    })
+    (l.mkIf cfg.overrides.compatibility.tmpfs-impermanence {
+      # since the impernamence module requires the /var and /etc directories, they are mounted before the rest of the initrd is done. 
+      # This causes conflict with the main nix-mineral function as they do not exist in the tmpfs / partition, meaning there is nothing to bind mount to.
+      # therefore I will force them to be tmpfs instead, note that this might require more system memory.
+      
+      fileSystems = {
+        "/root" = lib.mkForce {
+          device = "none";
+          fsType = "tmpfs";
+          options = [
+            "size=256M"
+            "mode=700"
+            "nosuid"
+            "noexec"
+            "nodev"
+          ];
+        };
+        "/var" = lib.mkForce {
+          device = "none";
+          fsType = "tmpfs";
+          options = [
+            "mode=755"
+            "size=2G"
+            "nosuid"
+            "noexec"
+            "nodev"
+          ];
+        };
+        "/etc" = lib.mkForce {
+          device = "none";
+          fsType = "tmpfs";
+          options = [
+            "mode=755"
+            "size=512M"
+            "nosuid"
+            "nodev"
+          ];
+        };
+      };
     })
 
     # Desktop
