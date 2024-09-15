@@ -160,6 +160,8 @@ let
     };
 
   cfg = config.nix-mineral;
+  overrideKernelParam = param: value: l.mkForce (builtins.filter (x: !(builtins.match "${param}.*" x)) config.boot.kernelParams ++ ["${param}=${value}"]);
+
 in
 {
 
@@ -443,7 +445,7 @@ in
     # Compatibility
 
     (l.mkIf cfg.overrides.compatibility.allow-unsigned-modules {
-      boot.kernelParams = l.mkOverride 100 [ "module.sig_enforce=0" ];
+      boot.kernelParams = overrideKernelParam "module.sig_enforce" "0";
     })
 
     (l.mkIf cfg.overrides.compatibility.allow-binfmt-misc {
@@ -451,7 +453,7 @@ in
     })
 
     (l.mkIf cfg.overrides.compatibility.allow-busmaster-bit {
-      boot.kernelParams = l.mkOverride 100 [ "efi=no_disable_early_pci_dma" ];
+      boot.kernelParams = overrideKernelParam "efi" "no_disable_early_pci_dma";
     })
 
     (l.mkIf cfg.overrides.compatibility.allow-io-uring {
@@ -467,13 +469,13 @@ in
     })
 
     (l.mkIf cfg.overrides.compatibility.no-lockdown {
-      boot.kernelParams = l.mkOverride 100 [ "lockdown=" ];
+      boot.kernelParams = overrideKernelParam "lockdown" "" ];
     })
 
     # Desktop
 
     (l.mkIf cfg.overrides.desktop.allow-multilib {
-      boot.kernelParams = l.mkOverride 100 [ "ia32_emulation=1" ];
+      boot.kernelParams = overrideKernelParam "ia32_emulation" "1" ];
     })
 
     (l.mkIf cfg.overrides.desktop.allow-unprivileged-userns {
@@ -572,18 +574,18 @@ in
     # Performance
 
     (l.mkIf cfg.overrides.performance.allow-smt {
-      boot.kernelParams = l.mkOverride 100 [ "mitigations=auto" ];
+      boot.kernelParams = overrideKernelParam "mitigations" "auto" ];
     })
 
     (l.mkIf cfg.overrides.performance.iommu-passthrough {
-      boot.kernelParams = l.mkOverride 100 [ "iommu.passthrough=1" ];
+      boot.kernelParams = overrideKernelParam "iommu.passthrough" "1" ];
     })
 
     (l.mkIf cfg.overrides.performance.no-mitigations {
-      boot.kernelParams = l.mkOverride 100 [ "mitigations=off" ];
+      boot.kernelParams = overrideKernelParam "mitigations" "off";
     })
 
-    (l.mkIf cfg.overrides.performance.no-pti { boot.kernelParams = l.mkOverride 100 [ "pti=off" ]; })
+    (l.mkIf cfg.overrides.performance.no-pti { boot.kernelParams = overrideKernelParam "pti" "off"; })
 
     # Security
 
@@ -1223,7 +1225,7 @@ in
       zramSwap.enable = true;
 
       # Limit access to nix to users with the "wheel" group. ("sudoers")
-      nix.settings.allowed-users = l.mkForce [ "@wheel" ];
+      nix.settings.allowed-users = l.mkDefault [ "@wheel" ];
     })
   ];
 }
