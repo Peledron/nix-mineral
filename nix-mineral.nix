@@ -160,7 +160,11 @@ let
     };
 
   cfg = config.nix-mineral;
-  overrideKernelParam = param: value: l.mkForce (builtins.filter (x: !(builtins.match "${param}.*" x)) config.boot.kernelParams ++ ["${param}=${value}"]);
+   param: value:
+  lib.mkForce (
+    lib.filter (x: !(builtins.match "${param}(=.*|$)" x != null)) config.boot.kernelParams
+    ++ (if value != null then ["${param}=${value}"] else [])
+  );
 
 in
 {
